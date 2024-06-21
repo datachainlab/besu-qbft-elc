@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eux
+
+RLY_HOME="$HOME/.yui-relayer"
+RLY="${RLY_BIN} --debug"
+CHAINID_ONE=ibc0
+CHAINID_TWO=ibc1
+PATH_NAME=ibc01
+SCRIPT_DIR=$(dirname "$0")
+RELAYER_DIR=$(dirname "${SCRIPT_DIR}")
+
+echo "Generating ${RLY_BIN} configurations..."
+
+# Ensure ${RLY_BIN} is installed
+if ! [ -x ${RLY_BIN} ]; then
+  echo "Error: ${RLY_BIN} is not installed." >&2
+  exit 1
+fi
+
+rm -rf ${RLY_HOME} &> /dev/null
+
+${RLY} config init
+${RLY} chains add-dir ${RELAYER_DIR}/configs/demo/
+# add a path between chain0 and chain1
+${RLY} paths add $CHAINID_ONE $CHAINID_TWO $PATH_NAME --file=${RELAYER_DIR}/configs/path.json

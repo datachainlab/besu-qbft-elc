@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = [
+    "elc",
+    "proto"
+]
+exclude = [
+    "proto-compiler",
+    "e2e"
+]
