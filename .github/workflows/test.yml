@@ -41,4 +41,5 @@ jobs:
       - run: curl -LO https://download.01.org/intel-sgx/sgx-linux/2.19/distro/ubuntu22.04-server/sgx_linux_x64_sdk_2.19.100.3.bin
       - run: chmod +x ./sgx_linux_x64_sdk_2.19.100.3.bin
       - run: echo -e 'no\n/opt' | ./sgx_linux_x64_sdk_2.19.100.3.bin
+      - run: cd ./e2e && npm install
       - run: source /opt/sgxsdk/environment && make -C e2e e2e-test
