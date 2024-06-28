@@ -17,7 +17,9 @@ if [ "$SGX_MODE" = "SW" ]; then
     export LCP_RA_ROOT_CERT_HEX=$(cat ${CERTS_DIR}/root.crt | xxd -p -c 1000000)
 fi
 
-make network deploy-contracts
+make network
+sleep 3
+make deploy-contracts
 
 ${LCP_BIN} --log_level=info service start --enclave=${ENCLAVE_PATH} --address=127.0.0.1:50051 --threads=2 &
 LCP_PID=$!

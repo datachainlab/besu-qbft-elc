@@ -4,18 +4,8 @@ services:
     ports:
       - 8545:8545
       - 8546:8546
-    healthcheck:
-      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || exit 1" ]
-      interval: 100ms
-      timeout: 1s
-      retries: 100
   qbft-testchain1:
     build: ./chains/chain1
     ports:
       - 8645:8545
       - 8646:8546
-    healthcheck:
-      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || exit 1" ]
-      interval: 100ms
-      timeout: 1s
-      retries: 100
