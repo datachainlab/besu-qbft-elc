@@ -32,7 +32,7 @@ network-down:
 
 .PHONY: lcp
 lcp:
-	$(MAKE) -C $(LCP_REPO) ./bin/lcp -B && mv $(LCP_REPO)/bin/* ./bin/
+	$(MAKE) -C $(LCP_REPO) ./bin/lcp -B && mkdir -p ./bin && mv $(LCP_REPO)/bin/lcp ./bin/
 
 .PHONY: deploy-contracts
 deploy-contracts:
@@ -44,7 +44,7 @@ extract-abi:
 	./scripts/extract-abi.sh
 
 .PHONY: e2e-test
-e2e-test: $(Signed_RustEnclave_Name) lcp yrly
+e2e-test: $(Signed_RustEnclave_Name) yrly lcp
 	LCP_BIN=$(LCP_BIN) ./scripts/run_e2e_test.sh
 
 .PHONY: clean
