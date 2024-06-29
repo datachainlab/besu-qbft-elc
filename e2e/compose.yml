@@ -9,13 +9,61 @@ services:
       interval: 100ms
       timeout: 1s
       retries: 100
+
   qbft-testchain1:
-    build: ./chains/chain1
+    image: hyperledger/besu:24.3.0
+    command: --data-path=./network/Node-0/data --genesis-file=./network/genesis.json --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all"
+    volumes:
+      - ./chains/chain1/network:/opt/besu/network
     ports:
       - 8645:8545
       - 8646:8546
-    healthcheck:
-      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || grep \"00000000000000000000000000000000:2161 00000000000000000000000000000000:0000 0A\" /proc/net/tcp6 || exit 1" ]
-      interval: 100ms
-      timeout: 1s
-      retries: 100
+      - 31303:30303
+    #user:
+    networks:
+      besu_network:
+        ipv4_address: 192.0.0.2
+
+  qbft-testchain2:
+    image: hyperledger/besu:24.3.0
+    command: --data-path=./network/Node-1/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545
+    volumes:
+      - ./chains/chain1/network:/opt/besu/network
+    #user:
+    networks:
+      besu_network:
+        ipv4_address: 192.0.0.3
+    depends_on:
+      - qbft-testchain1
+
+  qbft-testchain3:
+    image: hyperledger/besu:24.3.0
+    command: --data-path=./network/Node-2/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545
+    volumes:
+      - ./chains/chain1/network:/opt/besu/network
+    #user:
+    networks:
+      besu_network:
+        ipv4_address: 192.0.0.4
+    depends_on:
+      - qbft-testchain1
+
+  qbft-testchain4:
+    image: hyperledger/besu:24.3.0
+    command: --data-path=./network/Node-3/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545
+    volumes:
+      - ./chains/chain1/network:/opt/besu/network
+    #user:
+    networks:
+      besu_network:
+        ipv4_address: 192.0.0.5
+    depends_on:
+      - qbft-testchain1
+
+networks:
+  besu_network:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 192.0.0.0/8
+         gateway: 192.0.0.1

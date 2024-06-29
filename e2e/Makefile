@@ -21,10 +21,16 @@ LCP_BIN ?= ./bin/lcp
 LCP_REPO ?= ./lcp
 HARDHAT ?= npx hardhat
 DOCKER_COMPOSE ?= docker compose
+BESU ?= docker run -v "${PWD}":/work -w /work -it hyperledger/besu:24.3.0
+
+.PHONY: gen-network
+gen-network:
+	$(BESU) operator generate-blockchain-config --config-file=qbftConfigFile.json --to=networkFiles --private-key-file-name=key
+	./gen.sh
 
 .PHONY: network
 network:
-	$(DOCKER_COMPOSE) up --wait -d qbft-testchain0 qbft-testchain1
+	$(DOCKER_COMPOSE) --verbose up --wait -d || docker compose logs
 
 .PHONY: network-down
 network-down:

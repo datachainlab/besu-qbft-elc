@@ -42,4 +42,6 @@ jobs:
       - run: chmod +x ./sgx_linux_x64_sdk_2.19.100.3.bin
       - run: echo -e 'no\n/opt' | ./sgx_linux_x64_sdk_2.19.100.3.bin
       - run: cd ./e2e && npm install
-      - run: source /opt/sgxsdk/environment && make -C e2e e2e-test
+      - run: |
+          sed -i "s/#user:/user: \"$(id -u):$(id -g)\"/g" ./e2e/compose.yml
+      - run: source /opt/sgxsdk/environment && echo "$(id -u):$(id -g)" && make -C e2e e2e-test
