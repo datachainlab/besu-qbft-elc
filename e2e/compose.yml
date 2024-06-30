@@ -20,6 +20,11 @@ services:
       - 8646:8546
       - 31303:30303
     #user:
+    healthcheck:
+      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || grep \"00000000000000000000000000000000:2161 00000000000000000000000000000000:0000 0A\" /proc/net/tcp6 || exit 1" ]
+      interval: 100ms
+      timeout: 1s
+      retries: 100
     networks:
       besu_network:
         ipv4_address: 192.0.0.2
@@ -30,6 +35,11 @@ services:
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     #user:
+    healthcheck:
+      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || grep \"00000000000000000000000000000000:2161 00000000000000000000000000000000:0000 0A\" /proc/net/tcp6 || exit 1" ]
+      interval: 100ms
+      timeout: 1s
+      retries: 100
     networks:
       besu_network:
         ipv4_address: 192.0.0.3
@@ -42,6 +52,11 @@ services:
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     #user:
+    healthcheck:
+      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || grep \"00000000000000000000000000000000:2161 00000000000000000000000000000000:0000 0A\" /proc/net/tcp6 || exit 1" ]
+      interval: 100ms
+      timeout: 1s
+      retries: 100
     networks:
       besu_network:
         ipv4_address: 192.0.0.4
@@ -54,6 +69,11 @@ services:
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     #user:
+    healthcheck:
+      test: [ "CMD-SHELL", "grep \"00000000:2161 00000000:0000 0A\" /proc/net/tcp || grep \"00000000000000000000000000000000:2161 00000000000000000000000000000000:0000 0A\" /proc/net/tcp6 || exit 1" ]
+      interval: 100ms
+      timeout: 1s
+      retries: 100
     networks:
       besu_network:
         ipv4_address: 192.0.0.5
