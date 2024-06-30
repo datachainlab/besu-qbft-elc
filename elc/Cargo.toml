@@ -22,3 +22,6 @@ parity-scale-codec-derive = { version = "=3.6.4", default-features = false }
 
 [dev-dependencies]
 hex-literal = "0.4.1"
+
+[package.metadata.cargo-machete]
+ignored = ["parity-scale-codec", "parity-scale-codec-derive"]

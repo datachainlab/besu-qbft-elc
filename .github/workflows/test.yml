@@ -16,6 +16,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
       - uses: datachainlab/rust-cache@allow_registry_src_caching
       - run: cargo test
+      - run: make fmt
+      - run: make lint-tools
+      - run: make lint
 
   e2e-test:
     needs: test
@@ -44,4 +47,4 @@ jobs:
       - run: cd ./e2e && npm install
       - run: |
           sed -i "s/#user:/user: \"$(id -u):$(id -g)\"/g" ./e2e/compose.yml
-      - run: source /opt/sgxsdk/environment && echo "$(id -u):$(id -g)" && make -C e2e e2e-test
+      - run: source /opt/sgxsdk/environment && make -C e2e e2e-test

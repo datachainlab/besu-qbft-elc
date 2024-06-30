@@ -10,7 +10,7 @@ use besu_qbft_proto::ibc::{
 use core::time::Duration;
 use ethereum_light_client_verifier::execution::ExecutionVerifier;
 use light_client::types::proto::google::protobuf::Any as ProtoAny;
-use light_client::types::{Any, Height, Time};
+use light_client::types::{Any, Height};
 use prost::Message;
 use serde::{Deserialize, Serialize};
 
@@ -39,7 +39,7 @@ impl From<ClientState> for RawClientState {
                     revision_height: value.latest_height.revision_height(),
                 })
             },
-            trusting_period: value.trusting_period.as_secs() as u64,
+            trusting_period: value.trusting_period.as_secs(),
         }
     }
 }
@@ -95,13 +95,13 @@ impl ClientState {
             root.to_be_bytes().into(),
             // unwrap is safe because the address is 20 bytes
             &(path.as_slice().try_into().unwrap()),
-            proof.clone(),
+            proof,
         )? {
             Some(account) => Ok(H256::try_from_be_slice(account.storage_root.as_bytes())
                 .ok_or_else(|| {
                     Error::InvalidAccountStorageRoot(account.storage_root.0.to_vec())
                 })?),
-            None => Err(Error::AccountNotFound(root, path.clone())),
+            None => Err(Error::AccountNotFound(root, *path)),
         }
     }
 
@@ -119,7 +119,7 @@ impl ClientState {
             root.to_be_bytes().into(),
             key.to_be_bytes_vec().as_slice(),
             rlp::encode(&trim_left_zero(keccak256(&value).as_slice())).as_ref(),
-            proof.clone(),
+            proof,
         )?;
 
         Ok(())
@@ -137,7 +137,7 @@ impl ClientState {
         self.execution_verifier.verify_non_membership(
             root.to_be_bytes().into(),
             key.to_be_bytes_vec().as_slice(),
-            proof.clone(),
+            proof,
         )?;
 
         Ok(())

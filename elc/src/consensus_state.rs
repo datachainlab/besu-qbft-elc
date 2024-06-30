@@ -18,7 +18,7 @@ pub struct ConsensusState {
 impl From<ConsensusState> for RawConsensusState {
     fn from(value: ConsensusState) -> Self {
         RawConsensusState {
-            timestamp: value.timestamp.as_unix_timestamp_secs() as u64,
+            timestamp: value.timestamp.as_unix_timestamp_secs(),
             root: value.root.to_be_bytes_vec(),
             validators: value.validators.iter().map(|v| v.to_vec()).collect(),
         }

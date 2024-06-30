@@ -47,7 +47,7 @@ impl LightClient for BesuQBFTLightClient {
 
         let height = client_state.latest_height;
 
-        let timestamp = consensus_state.timestamp.clone();
+        let timestamp = consensus_state.timestamp;
         let state_id = gen_state_id(client_state, consensus_state)?;
         Ok(CreateClientResult {
             height,
@@ -127,7 +127,7 @@ impl LightClient for BesuQBFTLightClient {
                 // TODO make this configurable
                 Duration::from_secs(30),
                 new_consensus_state.timestamp,
-                trusted_consensus_state.timestamp.into(),
+                trusted_consensus_state.timestamp,
             ))
         };
         validation_context
@@ -140,12 +140,9 @@ impl LightClient for BesuQBFTLightClient {
             height,
             message: UpdateStateProxyMessage {
                 prev_height: Some(header.trusted_height),
-                prev_state_id: Some(gen_state_id(
-                    client_state.clone(),
-                    trusted_consensus_state.clone(),
-                )?),
+                prev_state_id: Some(gen_state_id(client_state, trusted_consensus_state)?),
                 post_height: height,
-                post_state_id: gen_state_id(new_client_state.clone(), new_consensus_state.clone())?,
+                post_state_id: gen_state_id(new_client_state, new_consensus_state.clone())?,
                 emitted_states: Default::default(),
                 timestamp: new_consensus_state.timestamp,
                 context: validation_context,
@@ -172,7 +169,7 @@ impl LightClient for BesuQBFTLightClient {
         Ok(VerifyMembershipResult {
             message: VerifyMembershipProxyMessage::new(
                 prefix,
-                path.to_string(),
+                path,
                 Some(keccak256(&value)),
                 proof_height,
                 gen_state_id(client_state, consensus_state)?,
@@ -196,7 +193,7 @@ impl LightClient for BesuQBFTLightClient {
         Ok(VerifyNonMembershipResult {
             message: VerifyMembershipProxyMessage::new(
                 prefix,
-                path.to_string(),
+                path,
                 None,
                 proof_height,
                 gen_state_id(client_state, consensus_state)?,
@@ -228,7 +225,7 @@ impl BesuQBFTLightClient {
         let mut marked = vec![false; trusted_validators.len()];
         let mut success = 0;
         for seal in committed_seals {
-            if seal.len() == 0 {
+            if seal.is_empty() {
                 continue;
             }
 
@@ -259,7 +256,7 @@ impl BesuQBFTLightClient {
 
         let mut success = 0;
         for (validator, seal) in untrusted_validators.iter().zip(committed_seals.iter()) {
-            if seal.len() == 0 {
+            if seal.is_empty() {
                 continue;
             }
 

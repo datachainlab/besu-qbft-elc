@@ -50,7 +50,7 @@ impl TryFrom<RawHeader> for Header {
     fn try_from(value: RawHeader) -> Result<Self, Self::Error> {
         let trusted_height = value
             .trusted_height
-            .ok_or_else(|| Error::InvalidHeaderZeroTrustedHeight)?;
+            .ok_or(Error::InvalidHeaderZeroTrustedHeight)?;
         Ok(Header {
             besu_header_rlp: value.besu_header_rlp,
             seals: value.seals,
@@ -75,7 +75,7 @@ impl TryFrom<Any> for Header {
                 let raw_header = RawHeader::decode(value).map_err(Error::Decode)?;
                 Header::try_from(raw_header)
             }
-            _ => Err(Error::UnexpectedClientType(type_url.to_string()).into()),
+            _ => Err(Error::UnexpectedClientType(type_url.to_string())),
         }
     }
 }
@@ -101,7 +101,7 @@ impl TryFrom<Any> for ClientMessage {
                 let header = Header::try_from(raw_header)?;
                 Ok(ClientMessage::Header(header))
             }
-            _ => Err(Error::UnexpectedClientType(type_url.to_string()).into()),
+            _ => Err(Error::UnexpectedClientType(type_url.to_string())),
         }
     }
 }
