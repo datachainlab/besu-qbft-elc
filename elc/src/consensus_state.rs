@@ -18,7 +18,7 @@ pub struct ConsensusState {
 impl From<ConsensusState> for RawConsensusState {
     fn from(value: ConsensusState) -> Self {
         RawConsensusState {
-            timestamp: value.timestamp.as_unix_timestamp_nanos() as u64,
+            timestamp: value.timestamp.as_unix_timestamp_secs() as u64,
             root: value.root.to_be_bytes_vec(),
             validators: value.validators.iter().map(|v| v.to_vec()).collect(),
         }
@@ -30,7 +30,7 @@ impl TryFrom<RawConsensusState> for ConsensusState {
 
     fn try_from(value: RawConsensusState) -> Result<Self, Self::Error> {
         Ok(ConsensusState {
-            timestamp: Time::from_unix_timestamp_nanos(value.timestamp as u128)?,
+            timestamp: Time::from_unix_timestamp_nanos(value.timestamp as u128 * 1_000_000_000)?,
             root: H256::try_from_be_slice(&value.root)
                 .ok_or_else(|| Error::InvalidConsensusStateRootSize(value.root.len()))?,
             validators: value

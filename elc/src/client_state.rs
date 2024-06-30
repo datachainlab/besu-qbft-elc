@@ -39,7 +39,7 @@ impl From<ClientState> for RawClientState {
                     revision_height: value.latest_height.revision_height(),
                 })
             },
-            trusting_period: value.trusting_period.as_nanos() as u64,
+            trusting_period: value.trusting_period.as_secs() as u64,
         }
     }
 }
@@ -54,7 +54,7 @@ impl TryFrom<RawClientState> for ClientState {
             latest_height: value.latest_height.map_or(Height::zero(), |height| {
                 Height::new(height.revision_number, height.revision_height)
             }),
-            trusting_period: Duration::from_nanos(value.trusting_period),
+            trusting_period: Duration::from_secs(value.trusting_period),
             execution_verifier: ExecutionVerifier::default(),
         })
     }
@@ -149,32 +149,6 @@ impl ClientState {
         }
         if self.ibc_store_address == Address::default() {
             return Err(Error::InvalidClientStateZeroIbcStoreAddress);
-        }
-        Ok(())
-    }
-
-    pub fn validate_within_trusting_period(
-        current_timestamp: Time,
-        trusting_period: Duration,
-        clock_drift: Duration,
-        untrusted_header_timestamp: Time,
-        trusted_consensus_state_timestamp: Time,
-    ) -> Result<(), Error> {
-        let trusting_period_end = (trusted_consensus_state_timestamp + trusting_period)?;
-        let drifted_current_timestamp = (current_timestamp + clock_drift)?;
-
-        if trusting_period_end <= current_timestamp {
-            return Err(Error::OutOfTrustingPeriod {
-                current_timestamp,
-                trusting_period_end,
-            });
-        }
-        if drifted_current_timestamp <= untrusted_header_timestamp {
-            return Err(Error::HeaderFromFuture {
-                current_timestamp,
-                clock_drift,
-                header_timestamp: untrusted_header_timestamp,
-            });
         }
         Ok(())
     }

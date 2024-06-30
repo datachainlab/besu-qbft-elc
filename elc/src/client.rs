@@ -119,6 +119,21 @@ impl LightClient for BesuQBFTLightClient {
             validators: eth_header.extra.validators,
         };
 
+        let validation_context = if client_state.trusting_period.is_zero() {
+            ValidationContext::Empty
+        } else {
+            ValidationContext::TrustingPeriod(TrustingPeriodContext::new(
+                client_state.trusting_period,
+                // TODO make this configurable
+                Duration::from_secs(30),
+                new_consensus_state.timestamp,
+                trusted_consensus_state.timestamp.into(),
+            ))
+        };
+        validation_context
+            .validate(ctx.host_timestamp())
+            .map_err(Error::Commitments)?;
+
         Ok(UpdateStateData {
             new_any_client_state: new_client_state.clone().into(),
             new_any_consensus_state: new_consensus_state.clone().into(),
@@ -133,16 +148,7 @@ impl LightClient for BesuQBFTLightClient {
                 post_state_id: gen_state_id(new_client_state.clone(), new_consensus_state.clone())?,
                 emitted_states: Default::default(),
                 timestamp: new_consensus_state.timestamp,
-                context: if client_state.trusting_period.is_zero() {
-                    ValidationContext::Empty
-                } else {
-                    ValidationContext::TrustingPeriod(TrustingPeriodContext::new(
-                        client_state.trusting_period,
-                        Duration::from_secs(0),
-                        new_consensus_state.timestamp,
-                        trusted_consensus_state.timestamp.into(),
-                    ))
-                },
+                context: validation_context,
             },
             prove: true,
         }
