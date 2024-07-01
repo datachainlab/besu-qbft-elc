@@ -39,6 +39,7 @@ impl QbftExtra {
         if it.len() != 5 {
             return Err(Error::InvalidHeaderExtraSize(it.len()));
         }
+        // unwrap is safe here because we have checked the length
         let vanity_data: Vec<u8> = it.next().unwrap().as_val()?;
         let validators: Vec<Vec<u8>> = it.next().unwrap().as_list()?;
         let raw_vote = it.next().unwrap().as_raw();

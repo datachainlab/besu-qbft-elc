@@ -33,6 +33,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+          cache-dependency-path: |
+            e2e/relayer/go.sum
       - uses: dtolnay/rust-toolchain@nightly
       - uses: datachainlab/rust-cache@allow_registry_src_caching
         with:

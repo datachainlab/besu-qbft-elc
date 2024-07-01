@@ -23,7 +23,6 @@ pub enum Error {
 
     /// invalid rlp format: not list: `{0:?}``
     InvalidRLPFormatNotList(Vec<u8>),
-
     /// invalid state root length: `{0}`
     InvalidStateRootLength(usize),
     /// invalid block number length: `{0}`
@@ -40,6 +39,19 @@ pub enum Error {
 
     /// unexpected client type: `{0}`
     UnexpectedClientType(String),
+
+    /// Invalid signature length: `{0}`
+    InvalidSignatureLength(usize),
+
+    /// untrusted validators and committed seals length mismatch: untrusted_validators_len={untrusted_validators_len} committed_seals_len={committed_seals_len}
+    UntrustedValidatorsAndCommittedSealsLengthMismatch {
+        untrusted_validators_len: usize,
+        committed_seals_len: usize,
+    },
+    /// insufficient trusted validators seals: actual={actual} threshold={threshold}
+    InsufficientTrustedValidatorsSeals { actual: usize, threshold: usize },
+    /// insufficient untrusted validators seals: actual={actual} threshold={threshold}
+    InsuffientUntrustedValidatorsSeals { actual: usize, threshold: usize },
 
     /// account not found: state_root={0:?} address={1:?}
     AccountNotFound(H256, Address),
@@ -74,6 +86,10 @@ pub enum Error {
     Decode(prost::DecodeError),
     /// rlp decode error: `{0}`
     Rlp(rlp::DecoderError),
+    /// secp256k1 error: `{0}`
+    Secp256k1(libsecp256k1::Error),
+    /// conversion error from slice to array: `{0}`
+    SliceToArrayConversionError(core::array::TryFromSliceError),
 }
 
 impl LightClientSpecificError for Error {}
@@ -99,5 +115,11 @@ impl From<ethereum_light_client_verifier::errors::Error> for Error {
 impl From<rlp::DecoderError> for Error {
     fn from(value: rlp::DecoderError) -> Self {
         Self::Rlp(value)
+    }
+}
+
+impl From<libsecp256k1::Error> for Error {
+    fn from(value: libsecp256k1::Error) -> Self {
+        Self::Secp256k1(value)
     }
 }

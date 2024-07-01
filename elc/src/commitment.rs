@@ -11,10 +11,10 @@ pub fn decode_eip1184_rlp_proof(proof: &[u8]) -> Result<Vec<Vec<u8>>, Error> {
     if r.is_list() {
         Ok(r.into_iter()
             .map(|r| {
-                let elems: Vec<Vec<u8>> = r.as_list().unwrap();
-                rlp::encode_list::<Vec<u8>, Vec<u8>>(&elems).into()
+                let elems: Vec<Vec<u8>> = r.as_list()?;
+                Ok(rlp::encode_list::<Vec<u8>, Vec<u8>>(&elems).into())
             })
-            .collect())
+            .collect::<Result<Vec<Vec<u8>>, Error>>()?)
     } else {
         Err(Error::InvalidRLPFormatNotList(proof.to_vec()))
     }
@@ -40,14 +40,15 @@ pub fn keccak256(bz: &[u8]) -> [u8; 32] {
 }
 
 pub fn verify_signature(sign_hash: H256, signature: &[u8]) -> Result<Address, Error> {
-    assert!(signature.len() == 65);
-
+    if signature.len() != 65 {
+        return Err(Error::InvalidSignatureLength(signature.len()));
+    }
     let mut s = Scalar::default();
     let _ = s.set_b32(&sign_hash.to_be_bytes());
 
-    let sig = Signature::parse_overflowing_slice(&signature[..64]).unwrap();
-    let rid = RecoveryId::parse(signature[64]).unwrap();
-    let signer: PublicKey = libsecp256k1::recover(&Message(s), &sig, &rid).unwrap();
+    let sig = Signature::parse_overflowing_slice(&signature[..64])?;
+    let rid = RecoveryId::parse(signature[64])?;
+    let signer: PublicKey = libsecp256k1::recover(&Message(s), &sig, &rid)?;
     Ok(address_from_pubkey(&signer))
 }
 
