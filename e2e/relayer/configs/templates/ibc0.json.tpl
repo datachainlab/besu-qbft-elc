@@ -26,7 +26,8 @@
       "lc_address": "$LCP_CLIENT_ADDRESS",
       "allow_all": false,
       "selectors": [
-        "0xa4f1ec28"
+        "0xa97c61d6",
+        "0x6ac73aa0"
       ]
     }
   },
