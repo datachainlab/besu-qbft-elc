@@ -84,6 +84,8 @@ pub enum Error {
     Decode(prost::DecodeError),
     /// rlp decode error: `{0}`
     Rlp(rlp::DecoderError),
+    /// conversion error from slice to array: `{0}`
+    SliceToArrayConversionError(core::array::TryFromSliceError),
 }
 
 impl LightClientSpecificError for Error {}

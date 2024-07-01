@@ -52,7 +52,11 @@ impl TryFrom<RawClientState> for ClientState {
     fn try_from(value: RawClientState) -> Result<Self, Self::Error> {
         Ok(ClientState {
             chain_id: U256::from_be_slice(&value.chain_id),
-            ibc_store_address: value.ibc_store_address.as_slice().try_into().unwrap(),
+            ibc_store_address: value
+                .ibc_store_address
+                .as_slice()
+                .try_into()
+                .map_err(Error::SliceToArrayConversionError)?,
             latest_height: value.latest_height.map_or(Height::zero(), |height| {
                 Height::new(height.revision_number, height.revision_height)
             }),
