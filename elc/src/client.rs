@@ -79,12 +79,12 @@ impl LightClient for BesuQBFTLightClient {
         let eth_header = EthHeader::parse(header.besu_header_rlp.as_slice())?;
         let commit_hash = eth_header.commit_hash()?;
 
-        self.verify_commit_seals_trusting(
+        Self::verify_commit_seals_trusting(
             &trusted_consensus_state.validators,
             &header.seals,
             commit_hash,
         )?;
-        self.verify_commit_seals_untrusting(
+        Self::verify_commit_seals_untrusting(
             &eth_header.extra.validators,
             &header.seals,
             commit_hash,
@@ -215,18 +215,13 @@ impl BesuQBFTLightClient {
     }
 
     fn verify_commit_seals_trusting(
-        &self,
         trusted_validators: &[Address],
         committed_seals: &[Vec<u8>],
         commit_hash: H256,
     ) -> Result<(), Error> {
         let mut marked = vec![false; trusted_validators.len()];
         let mut success = 0;
-        for seal in committed_seals {
-            if seal.is_empty() {
-                continue;
-            }
-
+        for seal in committed_seals.iter().filter(|seal| !seal.is_empty()) {
             let addr = verify_signature(commit_hash, seal)?;
             if let Some(pos) = trusted_validators.iter().position(|v| v == &addr) {
                 if !marked[pos] {
@@ -235,38 +230,46 @@ impl BesuQBFTLightClient {
                 }
             }
         }
-        if success * 3 <= trusted_validators.len() * 2 {
-            panic!("success * 3 <= trusted_validators.len() * 2");
+        if success * 3 <= trusted_validators.len() {
+            Err(Error::InsufficientTrustedValidatorsSeals {
+                actual: success * 3,
+                threshold: trusted_validators.len(),
+            })
+        } else {
+            Ok(())
         }
-        Ok(())
     }
 
     /// CONTRACT: the order of `committed_seals` must be corresponding to the order of `validators`
     fn verify_commit_seals_untrusting(
-        &self,
         untrusted_validators: &[Address],
         committed_seals: &[Vec<u8>],
         commit_hash: H256,
     ) -> Result<(), Error> {
         if untrusted_validators.len() != committed_seals.len() {
-            panic!("untrusted_validators.len() != committed_seals.len()");
+            return Err(Error::UntrustedValidatorsAndCommittedSealsLengthMismatch {
+                untrusted_validators_len: untrusted_validators.len(),
+                committed_seals_len: committed_seals.len(),
+            });
         }
-
         let mut success = 0;
-        for (validator, seal) in untrusted_validators.iter().zip(committed_seals.iter()) {
-            if seal.is_empty() {
-                continue;
-            }
-
+        for (validator, seal) in untrusted_validators
+            .iter()
+            .zip(committed_seals.iter())
+            .filter(|(_, seal)| !seal.is_empty())
+        {
             let addr = verify_signature(commit_hash, seal)?;
             if addr == *validator {
                 success += 1;
             }
         }
-
-        if success * 3 <= untrusted_validators.len() * 2 {
-            panic!("success * 3 <= untrusted_validators.len() * 2");
+        if success * 3 < untrusted_validators.len() * 2 {
+            Err(Error::InsuffientUntrustedValidatorsSeals {
+                actual: success * 3,
+                threshold: untrusted_validators.len() * 2,
+            })
+        } else {
+            Ok(())
         }
-        Ok(())
     }
 }

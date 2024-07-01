@@ -41,6 +41,16 @@ pub enum Error {
     /// unexpected client type: `{0}`
     UnexpectedClientType(String),
 
+    /// untrusted validators and committed seals length mismatch: untrusted_validators_len={untrusted_validators_len} committed_seals_len={committed_seals_len}
+    UntrustedValidatorsAndCommittedSealsLengthMismatch {
+        untrusted_validators_len: usize,
+        committed_seals_len: usize,
+    },
+    /// insufficient trusted validators seals: actual={actual} threshold={threshold}
+    InsufficientTrustedValidatorsSeals { actual: usize, threshold: usize },
+    /// insufficient untrusted validators seals: actual={actual} threshold={threshold}
+    InsuffientUntrustedValidatorsSeals { actual: usize, threshold: usize },
+
     /// account not found: state_root={0:?} address={1:?}
     AccountNotFound(H256, Address),
     /// account storage root mismatch: expected={0:?} actual={1:?}
