@@ -22,6 +22,7 @@ pub struct ClientState {
     pub ibc_store_address: Address,
     pub latest_height: Height,
     pub trusting_period: Duration,
+    pub max_clock_drift: Duration,
     #[serde(skip)]
     pub execution_verifier: ExecutionVerifier,
 }
@@ -40,6 +41,7 @@ impl From<ClientState> for RawClientState {
                 })
             },
             trusting_period: value.trusting_period.as_secs(),
+            max_clock_drift: value.max_clock_drift.as_secs(),
         }
     }
 }
@@ -55,6 +57,7 @@ impl TryFrom<RawClientState> for ClientState {
                 Height::new(height.revision_number, height.revision_height)
             }),
             trusting_period: Duration::from_secs(value.trusting_period),
+            max_clock_drift: Duration::from_secs(value.max_clock_drift),
             execution_verifier: ExecutionVerifier::default(),
         })
     }

@@ -6,7 +6,6 @@ use crate::header::EthHeader;
 use crate::internal_prelude::*;
 use crate::message::Header;
 use crate::types::{gen_state_id, Address, H256};
-use core::time::Duration;
 use light_client::commitments::{
     EmittedState, TrustingPeriodContext, UpdateStateProxyMessage, ValidationContext,
     VerifyMembershipProxyMessage,
@@ -124,8 +123,7 @@ impl LightClient for BesuQBFTLightClient {
         } else {
             ValidationContext::TrustingPeriod(TrustingPeriodContext::new(
                 client_state.trusting_period,
-                // TODO make this configurable
-                Duration::from_secs(30),
+                client_state.max_clock_drift,
                 new_consensus_state.timestamp,
                 trusted_consensus_state.timestamp,
             ))

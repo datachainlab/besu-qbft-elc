@@ -32,7 +32,8 @@
     "origin_prover": {
       "@type": "/relayer.provers.qbft.config.ProverConfig",
       "consensus_type": "qbft",
-      "trusting_period": "336h"
+      "trusting_period": "336h",
+      "max_clock_drift": "30s"
     },
     "lcp_service_address": "localhost:50051",
     "mrenclave": "$MRENCLAVE",
