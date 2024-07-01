@@ -36,8 +36,12 @@ impl TryFrom<RawConsensusState> for ConsensusState {
             validators: value
                 .validators
                 .iter()
-                .map(|v| v.as_slice().try_into().unwrap())
-                .collect(),
+                .map(|v| {
+                    v.as_slice()
+                        .try_into()
+                        .map_err(Error::SliceToArrayConversionError)
+                })
+                .collect::<Result<_, _>>()?,
         })
     }
 }
