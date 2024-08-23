@@ -156,6 +156,7 @@ dependencies = [
  "besu-qbft-proto",
  "displaydoc",
  "ethereum-light-client-verifier",
+ "hex-literal",
  "libsecp256k1",
  "light-client",
  "parity-scale-codec",

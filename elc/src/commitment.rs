@@ -1,6 +1,7 @@
 use crate::errors::Error;
 use crate::internal_prelude::*;
 use crate::types::{Address, H256, U256};
+use hex_literal::hex;
 use libsecp256k1::{curve::Scalar, Message, PublicKey, RecoveryId, Signature};
 use rlp::Rlp;
 use tiny_keccak::Keccak;
@@ -20,11 +21,11 @@ pub fn decode_eip1184_rlp_proof(proof: &[u8]) -> Result<Vec<Vec<u8>>, Error> {
     }
 }
 
-pub fn calculate_ibc_commitment_storage_key(ibc_commitments_slot: U256, path: &[u8]) -> U256 {
+pub fn calculate_ibc_commitment_storage_key(path: &[u8]) -> U256 {
     let h = keccak256(
         &[
             keccak256(path).as_slice(),
-            ibc_commitments_slot.to_be_bytes_vec().as_slice(),
+            hex!("1ee222554989dda120e26ecacf756fe1235cd8d726706b57517715dde4f0c900").as_slice(),
         ]
         .concat(),
     );
