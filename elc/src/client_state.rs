@@ -120,7 +120,7 @@ impl ClientState {
         value: Vec<u8>,
     ) -> Result<(), Error> {
         let proof = decode_eip1184_rlp_proof(&proof)?;
-        let key = calculate_ibc_commitment_storage_key(U256::default(), path.as_bytes());
+        let key = calculate_ibc_commitment_storage_key(path.as_bytes());
 
         self.execution_verifier.verify_membership(
             root.to_be_bytes().into(),
@@ -139,7 +139,7 @@ impl ClientState {
         path: String,
     ) -> Result<(), Error> {
         let proof = decode_eip1184_rlp_proof(&proof)?;
-        let key = calculate_ibc_commitment_storage_key(U256::default(), path.as_bytes());
+        let key = calculate_ibc_commitment_storage_key(path.as_bytes());
 
         self.execution_verifier.verify_non_membership(
             root.to_be_bytes().into(),
