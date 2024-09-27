@@ -62,7 +62,7 @@ impl TryFrom<RawClientState> for ClientState {
             }),
             trusting_period: Duration::from_secs(value.trusting_period),
             max_clock_drift: Duration::from_secs(value.max_clock_drift),
-            execution_verifier: ExecutionVerifier::default(),
+            execution_verifier: ExecutionVerifier,
         })
     }
 }
