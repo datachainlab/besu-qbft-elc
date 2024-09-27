@@ -196,7 +196,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 [[package]]
 name = "commitments"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/lcp?rev=v0.2.9#8934493d4e9ca37917587ccf8da666ce81fbbe92"
+source = "git+https://github.com/datachainlab/lcp?rev=v0.2.10#69ffe7d94b186b2761e45ebda306be35dc30b001"
 dependencies = [
  "alloy-sol-types",
  "crypto",
@@ -245,7 +245,7 @@ checksum = "7a81dae078cea95a014a339291cec439d2f232ebe854a9d672b796c6afafa9b7"
 [[package]]
 name = "crypto"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/lcp?rev=v0.2.9#8934493d4e9ca37917587ccf8da666ce81fbbe92"
+source = "git+https://github.com/datachainlab/lcp?rev=v0.2.10#69ffe7d94b186b2761e45ebda306be35dc30b001"
 dependencies = [
  "flex-error",
  "hex",
@@ -624,7 +624,7 @@ dependencies = [
 [[package]]
 name = "lcp-proto"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/lcp?rev=v0.2.9#8934493d4e9ca37917587ccf8da666ce81fbbe92"
+source = "git+https://github.com/datachainlab/lcp?rev=v0.2.10#69ffe7d94b186b2761e45ebda306be35dc30b001"
 dependencies = [
  "ibc-proto",
  "prost",
@@ -634,7 +634,7 @@ dependencies = [
 [[package]]
 name = "lcp-types"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/lcp?rev=v0.2.9#8934493d4e9ca37917587ccf8da666ce81fbbe92"
+source = "git+https://github.com/datachainlab/lcp?rev=v0.2.10#69ffe7d94b186b2761e45ebda306be35dc30b001"
 dependencies = [
  "flex-error",
  "hex",
@@ -709,7 +709,7 @@ dependencies = [
 [[package]]
 name = "light-client"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/lcp?rev=v0.2.9#8934493d4e9ca37917587ccf8da666ce81fbbe92"
+source = "git+https://github.com/datachainlab/lcp?rev=v0.2.10#69ffe7d94b186b2761e45ebda306be35dc30b001"
 dependencies = [
  "bincode",
  "commitments",
@@ -1282,7 +1282,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 [[package]]
 name = "store"
 version = "0.1.0"
-source = "git+https://github.com/datachainlab/lcp?rev=v0.2.9#8934493d4e9ca37917587ccf8da666ce81fbbe92"
+source = "git+https://github.com/datachainlab/lcp?rev=v0.2.10#69ffe7d94b186b2761e45ebda306be35dc30b001"
 dependencies = [
  "flex-error",
  "log",

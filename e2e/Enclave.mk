@@ -1,6 +1,3 @@
-######## Import SGX SDK ########
-include ImportRustSGXSDK.mk
-
 ######## SGX SDK Settings ########
 SGX_SDK ?= /opt/sgxsdk
 SGX_MODE ?= HW
@@ -9,7 +6,7 @@ SGX_DEBUG ?= 0
 SGX_PRERELEASE ?= 0
 SGX_PRODUCTION ?= 0
 
-include rust-sgx-sdk/buildenv.mk
+include buildenv.mk
 
 ifeq ($(shell getconf LONG_BIT), 32)
 	SGX_ARCH := x86
@@ -52,7 +49,8 @@ endif
 
 SGX_COMMON_CFLAGS += -fstack-protector
 
-CARGO_FEATURES = --features=default
+ENCLAVE_CARGO_FEATURES = --features=default
+APP_CARGO_FEATURES     = --features=default
 ifeq ($(SGX_PRODUCTION), 1)
 	SGX_ENCLAVE_MODE = "Production Mode"
 	SGX_ENCLAVE_CONFIG = $(SGX_ENCLAVE_CONFIG)
@@ -63,7 +61,8 @@ else
 	SGX_ENCLAVE_CONFIG = "enclave/Enclave.config.xml"
 	SGX_SIGN_KEY = "enclave/Enclave_private.pem"
 	ifneq ($(SGX_MODE), HW)
-		CARGO_FEATURES = --features=default,sgx-sw
+		ENCLAVE_CARGO_FEATURES = --features=default
+		APP_CARGO_FEATURES     = --features=default,sgx-sw
 	endif
 endif
 
@@ -93,7 +92,7 @@ ProtectedFs_Library_Name := sgx_tprotected_fs
 
 RustEnclave_C_Files := $(wildcard ./enclave/*.c)
 RustEnclave_C_Objects := $(RustEnclave_C_Files:.c=.o)
-RustEnclave_Include_Paths := -I$(CUSTOM_COMMON_PATH)/inc -I$(CUSTOM_EDL_PATH) -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/stlport -I$(SGX_SDK)/include/epid -I ./enclave -I./include
+RustEnclave_Include_Paths := -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/stlport -I$(SGX_SDK)/include/epid -I ./enclave -I./include
 
 RustEnclave_Link_Libs := -L$(CUSTOM_LIBRARY_PATH) -lenclave
 RustEnclave_Compile_Flags := $(SGX_COMMON_CFLAGS) $(ENCLAVE_CFLAGS) $(RustEnclave_Include_Paths)
@@ -110,7 +109,7 @@ Signed_RustEnclave_Name := bin/enclave.signed.so
 ######## EDL Objects ########
 
 $(Enclave_EDL_Files): $(SGX_EDGER8R) enclave/Enclave.edl
-	$(SGX_EDGER8R) --trusted enclave/Enclave.edl --search-path $(SGX_SDK)/include --search-path $(CUSTOM_EDL_PATH) --trusted-dir enclave
+	$(SGX_EDGER8R) --trusted enclave/Enclave.edl --search-path $(SGX_SDK)/include --trusted-dir enclave
 	@echo "GEN  =>  $(Enclave_EDL_Files)"
 
 ######## Enclave Objects ########
@@ -130,6 +129,6 @@ $(Signed_RustEnclave_Name): $(RustEnclave_Name)
 
 .PHONY: enclave
 enclave:
-	@cd enclave && RUSTFLAGS=$(RUSTFLAGS) cargo build $(CARGO_TARGET) $(CARGO_FEATURES)
+	cd enclave && RUSTFLAGS=$(RUSTFLAGS) cargo build $(CARGO_TARGET) $(CARGO_FEATURES)
 	@mkdir -p ./lib
 	@cp enclave/target/$(OUTPUT_PATH)/libproxy_enclave.a ./lib/libenclave.a

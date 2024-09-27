@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+#![no_std]
 #![allow(clippy::result_large_err)]
 #![allow(clippy::large_enum_variant)]
 
@@ -16,7 +16,6 @@ pub mod types;
 
 mod internal_prelude {
     pub use alloc::boxed::Box;
-    pub use alloc::format;
     pub use alloc::string::{String, ToString};
     pub use alloc::vec;
     pub use alloc::vec::Vec;
