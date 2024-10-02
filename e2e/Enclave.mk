@@ -49,29 +49,20 @@ endif
 
 SGX_COMMON_CFLAGS += -fstack-protector
 
-ENCLAVE_CARGO_FEATURES = --features=default
-APP_CARGO_FEATURES     = --features=default
 ifeq ($(SGX_PRODUCTION), 1)
 	SGX_ENCLAVE_MODE = "Production Mode"
 	SGX_ENCLAVE_CONFIG = $(SGX_ENCLAVE_CONFIG)
 	SGX_SIGN_KEY = $(SGX_COMMERCIAL_KEY)
-	CARGO_FEATURES = --features=production
 else
 	SGX_ENCLAVE_MODE = "Development Mode"
 	SGX_ENCLAVE_CONFIG = "enclave/Enclave.config.xml"
 	SGX_SIGN_KEY = "enclave/Enclave_private.pem"
-	ifneq ($(SGX_MODE), HW)
-		ENCLAVE_CARGO_FEATURES = --features=default
-		APP_CARGO_FEATURES     = --features=default,sgx-sw
-	endif
 endif
 
 ######## CUSTOM Settings ########
 
 CUSTOM_LIBRARY_PATH := ./lib
 CUSTOM_BIN_PATH := ./bin
-CUSTOM_EDL_PATH := ./rust-sgx-sdk/edl
-CUSTOM_COMMON_PATH := ./rust-sgx-sdk/common
 
 ######## EDL Settings ########
 
@@ -129,6 +120,6 @@ $(Signed_RustEnclave_Name): $(RustEnclave_Name)
 
 .PHONY: enclave
 enclave:
-	cd enclave && RUSTFLAGS=$(RUSTFLAGS) cargo build $(CARGO_TARGET) $(CARGO_FEATURES)
+	@cd enclave && RUSTFLAGS=$(RUSTFLAGS) cargo build $(CARGO_TARGET) $(CARGO_FEATURES)
 	@mkdir -p ./lib
 	@cp enclave/target/$(OUTPUT_PATH)/libproxy_enclave.a ./lib/libenclave.a

@@ -7,10 +7,6 @@ all: $(Signed_RustEnclave_Name)
 fmt:
 	@cargo fmt --all && cd ./enclave && cargo fmt --all
 
-.PHONY: docker
-docker:
-	@cd rust-sgx-sdk/dockerfile && docker build --no-cache -t datachainlab/sgx-rust:2004-1.1.5 -f Dockerfile.2004.nightly .
-
 .PHONY: yrly
 yrly:
 	cd ./relayer && go build -o ../bin/yrly -tags customcert .
