@@ -6,8 +6,6 @@ pub mod protobuf {
     // source: https://github.com/tokio-rs/prost/blob/master/prost-types/src/lib.rs
     #[allow(unused_imports)]
     use core::convert::TryFrom;
-    use core::i32;
-    use core::i64;
     #[allow(unused_imports)]
     use core::time;
 
@@ -149,7 +147,7 @@ pub mod protobuf {
     impl Eq for Timestamp {}
 
     #[cfg(feature = "std")]
-    #[allow(clippy::derive_hash_xor_eq)] // Derived logic is correct: comparing the 2 fields for equality
+    #[allow(clippy::derived_hash_with_manual_eq)] // Derived logic is correct: comparing the 2 fields for equality
     impl std::hash::Hash for Timestamp {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.seconds.hash(state);
