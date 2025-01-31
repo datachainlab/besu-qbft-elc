@@ -78,7 +78,7 @@ async function main() {
     "Deploying the contracts with the account:",
     await deployer.getAddress()
   );
-  console.log("Account balance:", (await hre.ethers.provider.getBalance(deployer.getAddress())).toString());
+  console.log("Account balance:", (await hre.ethers.provider.getBalance(await deployer.getAddress())).toString());
 
   const ibcHandler = await deployIBC(deployer);
   const lcpProtoMarshaler = await deploy(deployer, "LCPProtoMarshaler");
