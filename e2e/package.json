@@ -6,7 +6,7 @@
     "@hyperledger-labs/yui-ibc-solidity": "git+https://github.com/hyperledger-labs/yui-ibc-solidity.git#semver:=v0.3.40",
     "@datachainlab/lcp-solidity": "git+https://github.com/datachainlab/lcp-solidity.git#v0.1.17",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "chai": "^5.1.2",
+    "chai": "^4.5.0",
     "hardhat": "^2.22.18"
   },
   "author": "ibc-solidity authors",
