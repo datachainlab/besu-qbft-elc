@@ -15,6 +15,7 @@ function saveContractAddresses(addresses) {
 }
 
 async function deploy(deployer, contractName, args = []) {
+  console.log({contractName});
   const factory = await hre.ethers.getContractFactory(contractName);
   const contract = await factory.connect(deployer).deploy(...args);
   await contract.waitForDeployment();
@@ -22,6 +23,7 @@ async function deploy(deployer, contractName, args = []) {
 }
 
 async function deployAndLink(deployer, contractName, libraries, args = []) {
+  console.log({contractName});
   const factory = await hre.ethers.getContractFactory(contractName, {
     libraries: libraries
   });
