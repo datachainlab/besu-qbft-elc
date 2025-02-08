@@ -17,7 +17,7 @@ LCP_BIN ?= ./bin/lcp
 LCP_REPO ?= ./lcp
 HARDHAT ?= npx hardhat
 DOCKER_COMPOSE ?= docker compose
-BESU ?= docker run -v "${CURDIR}":/work -w /work -u=$(shell id -u):$(shell id -g) hyperledger/besu:24.3.0
+BESU ?= docker run -v "${CURDIR}":/work -w /work -u=$(shell id -u):$(shell id -g) hyperledger/besu:25.1.0
 
 .PHONY: gen-network
 gen-network:
@@ -53,3 +53,8 @@ e2e-test: $(Signed_RustEnclave_Name) yrly lcp
 clean:
 	@rm -f $(RustEnclave_Name) $(Signed_RustEnclave_Name) enclave/*_t.* lib/*.a
 	@cd enclave && cargo clean
+
+.PHONY: tear-down
+tear-down: network-down
+	pkill lcp || true
+	rm -rf chains/chain1/network/Node-[0-3]/data/[^k]*
