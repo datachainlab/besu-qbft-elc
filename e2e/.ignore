@@ -1,8 +1,0 @@
-# cargo-machete v0.7.0 detects unused dependencies in lcp.
-# Thus ignore linting for submodules until resolved the issue.
-# ---
-# Analyzing dependencies of crates in this directory...
-# cargo-machete found the following unused dependencies in this directory:
-# light-client -- ./e2e/lcp/modules/light-client/Cargo.toml:
-#         serde
-lcp/

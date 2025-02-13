@@ -17,7 +17,10 @@ fi
 
 make network
 sleep 3
+
 make deploy-contracts
+# To avoid `Nonce too low`
+sleep 3
 
 ./scripts/extract-abi.sh
 source ./chain0.env.sh && ./relayer/scripts/gen-config.sh ibc0

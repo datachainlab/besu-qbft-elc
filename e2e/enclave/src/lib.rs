@@ -10,5 +10,6 @@ setup_runtime!({
 fn build_lc_registry() -> MapLightClientRegistry {
     let mut registry = MapLightClientRegistry::new();
     besu_qbft_elc::register_implementations(&mut registry);
+    registry.seal().unwrap();
     registry
 }

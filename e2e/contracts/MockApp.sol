@@ -60,13 +60,13 @@ contract MockApp is IBCAppBase {
         virtual
         override
         onlyIBC
-        returns (string memory)
+        returns (address, string memory)
     {
         require(
             bytes(msg_.version).length == 0 || keccak256(bytes(msg_.version)) == keccak256(bytes(MOCKAPP_VERSION)),
             "version mismatch"
         );
-        return MOCKAPP_VERSION;
+        return (address(this), MOCKAPP_VERSION);
     }
 
     function onChanOpenTry(IIBCModule.MsgOnChanOpenTry calldata msg_)
@@ -74,9 +74,9 @@ contract MockApp is IBCAppBase {
         virtual
         override
         onlyIBC
-        returns (string memory)
+        returns (address, string memory)
     {
         require(keccak256(bytes(msg_.counterpartyVersion)) == keccak256(bytes(MOCKAPP_VERSION)), "version mismatch");
-        return MOCKAPP_VERSION;
+        return (address(this), MOCKAPP_VERSION);
     }
 }

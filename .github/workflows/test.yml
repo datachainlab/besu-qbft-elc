@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version-file: e2e/relayer/go.mod
           cache-dependency-path: |
             e2e/relayer/go.sum
       - uses: dtolnay/rust-toolchain@nightly
