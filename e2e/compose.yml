@@ -11,8 +11,8 @@ services:
       retries: 100
 
   qbft-testchain1:
-    image: hyperledger/besu:24.3.0
-    command: --data-path=./network/Node-0/data --genesis-file=./network/genesis.json --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all"
+    image: hyperledger/besu:25.1.0
+    command: --data-path=./network/Node-0/data --genesis-file=./network/genesis.json --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT,WEB3 --host-allowlist="*" --rpc-http-cors-origins="all" --min-gas-price="0"
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     ports:
@@ -30,8 +30,8 @@ services:
         ipv4_address: 192.0.0.2
 
   qbft-testchain2:
-    image: hyperledger/besu:24.3.0
-    command: --data-path=./network/Node-1/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545
+    image: hyperledger/besu:25.1.0
+    command: --data-path=./network/Node-1/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545 --min-gas-price="0"
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     #user:
@@ -47,8 +47,8 @@ services:
       - qbft-testchain1
 
   qbft-testchain3:
-    image: hyperledger/besu:24.3.0
-    command: --data-path=./network/Node-2/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545
+    image: hyperledger/besu:25.1.0
+    command: --data-path=./network/Node-2/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545 --min-gas-price="0"
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     #user:
@@ -64,8 +64,8 @@ services:
       - qbft-testchain1
 
   qbft-testchain4:
-    image: hyperledger/besu:24.3.0
-    command: --data-path=./network/Node-3/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545
+    image: hyperledger/besu:25.1.0
+    command: --data-path=./network/Node-3/data --genesis-file=./network/genesis.json --bootnodes=enode://${BESU_BOOTNODE_ID}@192.0.0.2:30303 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,QBFT --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8545 --min-gas-price="0"
     volumes:
       - ./chains/chain1/network:/opt/besu/network
     #user:

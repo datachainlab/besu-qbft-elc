@@ -13,8 +13,8 @@ rlp = { version = "0.5.2", default-features = false }
 ruint = { version = "1.12.3", default-features = false, features = ["serde"] }
 hex-literal = "0.4.1"
 
-light-client = { git = "https://github.com/datachainlab/lcp", rev = "v0.2.10", default-features = false }
-ethereum-light-client-verifier = { git = "https://github.com/datachainlab/ethereum-light-client-rs", rev = "186c5b1d9935f15428ca8b209ad99ed20eaf81c6", default-features = false }
+light-client = { git = "https://github.com/datachainlab/lcp", rev = "v0.2.12", default-features = false }
+ethereum-light-client-verifier = { git = "https://github.com/datachainlab/ethereum-light-client-rs", rev = "v0.2.0", default-features = false }
 besu-qbft-proto = { path = "../proto", default-features = false }
 
 # fix the following versions to avoid conflict with the compiler version dependencies
